@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexStep | 3D Sneakers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #111;
+            --secondary: #f0f0f0;
+            --accent: #ff4757;
+            --light-accent: #ff6b81;
+            --text: #333;
+            --light-text: #777;
+        }
+
+        body {
+            background-color: var(--secondary);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 40px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .cart-icon {
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--primary);
+            transition: color 0.3s;
+        }
+
+        .cart-icon:hover {
+            color: var(--accent);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            width: 50%;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: var(--light-text);
+            line-height: 1.6;
+            max-width: 80%;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);
+        }
+
+        .cta-button:hover {
+            background-color: var(--light-accent);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(255, 71, 87, 0.4);
+        }
+
+        /* 3D Sneaker Container */
+        .sneaker-3d-container {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50%;
+            height: 70%;
+            perspective: 1200px;
+        }
+
+        .sneaker-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .sneaker-part {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .sneaker-base {
+            background-image: url('https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            transform: translateZ(0px);
+        }
+
+        .sneaker-laces {
+            background-image: url('https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            transform: translateZ(20px);
+        }
+
+        .sneaker-logo {
+            background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            transform: translateZ(40px);
+        }
+
+        .sneaker-sole {
+            background-image: url('https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            transform: translateZ(-10px);
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background-color: var(--accent);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Collection Section */
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: var(--accent);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--light-text);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 60px;
+            line-height: 1.6;
+        }
+
+        .collection {
+            padding: 100px 5%;
+        }
+
+        .sneaker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .sneaker-card {
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .sneaker-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .sneaker-image {
+            height: 250px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sneaker-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .sneaker-card:hover .sneaker-image img {
+            transform: scale(1.05);
+        }
+
+        .sneaker-info {
+            padding: 25px;
+        }
+
+        .sneaker-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .sneaker-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .sneaker-desc {
+            color: var(--light-text);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: var(--accent);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 5%;
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .features .section-title {
+            color: white;
+        }
+
+        .features .section-subtitle {
+            color: #aaa;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px 25px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 25px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-desc {
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        /* Customizer Section */
+        .customizer {
+            padding: 100px 5%;
+            text-align: center;
+        }
+
+        .customizer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .customizer-preview {
+            width: 100%;
+            height: 400px;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-sneaker {
+            width: 300px;
+            height: 300px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: all 0.3s;
+        }
+
+        .customizer-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .option {
+            padding: 10px 25px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .option:hover, .option.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 3px solid white;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 80px 5% 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-logo span {
+            color: var(--accent);
+        }
+
+        .footer-desc {
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            background-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .footer-title {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .newsletter-form button {
+            padding: 0 25px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            background-color: var(--light-accent);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .sneaker-3d-container {
+                width: 45%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+                padding-top: 100px;
+            }
+            
+            .hero-content {
+                width: 100%;
+                margin-bottom: 50px;
+            }
+            
+            .hero p {
+                max-width: 100%;
+            }
+            
+            .sneaker-3d-container {
+                position: relative;
+                right: 0;
+                top: 0;
+                transform: none;
+                width: 100%;
+                height: 300px;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cta-button {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+            
+            .sneaker-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                bottom: 10px;
+            }
+            
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <a href="#" class="logo">Nex<span>Step</span></a>
+        
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#collection">Collection</a></li>
+                <li><a href="#customizer">Customizer</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        
+        <div class="cart-icon">
+            <i class="fas fa-shopping-bag"></i>
+        </div>
+        
+        <div class="mobile-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Step Into The <span>Future</span> Of Sneakers</h1>
+            <p>Experience the next generation of footwear with our revolutionary 3D-designed sneakers. Customizable, comfortable, and cutting-edge.</p>
+            <a href="#collection" class="cta-button">Explore Collection</a>
+        </div>
+        
+        <!-- 3D Sneaker Viewer -->
+        <div class="sneaker-3d-container">
+            <div class="sneaker-3d" id="sneaker3d">
+                <div class="sneaker-part sneaker-base"></div>
+                <div class="sneaker-part sneaker-laces"></div>
+                <div class="sneaker-part sneaker-logo"></div>
+                <div class="sneaker-part sneaker-sole"></div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" id="rotate-left"><i class="fas fa-rotate-left"></i></button>
+                <button class="control-btn" id="rotate-right"><i class="fas fa-rotate-right"></i></button>
+                <button class="control-btn" id="zoom-in"><i class="fas fa-search-plus"></i></button>
+                <button class="control-btn" id="zoom-out"><i class="fas fa-search-minus"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collection Section -->
+    <section class="collection" id="collection">
+        <h2 class="section-title">Our Signature Collection</h2>
+        <p class="section-subtitle">Crafted with precision and designed for performance. Each pair tells a story of innovation and style.</p>
+        
+        <div class="sneaker-grid">
+            <!-- Sneaker 1 -->
+            <div class="sneaker-card">
+                <div class="sneaker-image">
+                    <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="NexStep Quantum">
+                </div>
+                <div class="sneaker-info">
+                    <h3 class="sneaker-name">Quantum X</h3>
+                    <div class="sneaker-price">$189.99</div>
+                    <p class="sneaker-desc">Lightweight running sneaker with adaptive cushioning technology.</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Sneaker 2 -->
+            <div class="sneaker-card">
+                <div class="sneaker-image">
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="NexStep Aero">
+                </div>
+                <div class="sneaker-info">
+                    <h3 class="sneaker-name">Aero Flow</h3>
+                    <div class="sneaker-price">$219.99</div>
+                    <p class="sneaker-desc">Breathable mesh upper with carbon fiber stability plate.</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Sneaker 3 -->
+            <div class="sneaker-card">
+                <div class="sneaker-image">
+                    <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="NexStep Terra">
+                </div>
+                <div class="sneaker-info">
+                    <h3 class="sneaker-name">Terra Trail</h3>
+                    <div class="sneaker-price">$199.99</div>
+                    <p class="sneaker-desc">All-terrain sneaker with enhanced grip and waterproof technology.</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Why Choose NexStep</h2>
+        <p class="section-subtitle">We combine innovative technology with sustainable materials to create sneakers that perform and inspire.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h3 class="feature-title">3D Printed Design</h3>
+                <p class="feature-desc">Each sneaker is designed using advanced 3D modeling software and printed with precision technology.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <h3 class="feature-title">Sustainable Materials</h3>
+                <p class="feature-desc">We use recycled and biodegradable materials to minimize our environmental footprint.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shoe-prints"></i>
+                </div>
+                <h3 class="feature-title">Custom Fit</h3>
+                <p class="feature-desc">Our sneakers adapt to your foot shape for unparalleled comfort and support.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title">Performance Driven</h3>
+                <p class="feature-desc">Engineered for athletes and active lifestyles with cutting-edge performance features.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customizer Section -->
+    <section class="customizer" id="customizer">
+        <h2 class="section-title">Design Your Own</h2>
+        <p class="section-subtitle">Use our 3D customizer to create a sneaker that's uniquely yours. Choose colors, materials, and details.</p>
+        
+        <div class="customizer-container">
+            <div class="customizer-preview">
+                <div class="custom-sneaker" id="customSneaker"></div>
+            </div>
+            
+            <div class="customizer-options">
+                <div class="option active" data-model="classic">Classic</div>
+                <div class="option" data-model="runner">Runner</div>
+                <div class="option" data-model="high-top">High Top</div>
+                <div class="option" data-model="minimal">Minimal</div>
+            </div>
+            
+            <h3>Choose Color</h3>
+            <div class="color-options">
+                <div class="color-option" style="background-color: #111;" data-color="#111"></div>
+                <div class="color-option" style="background-color: #ff4757;" data-color="#ff4757"></div>
+                <div class="color-option" style="background-color: #2ed573;" data-color="#2ed573"></div>
+                <div class="color-option" style="background-color: #1e90ff;" data-color="#1e90ff"></div>
+                <div class="color-option" style="background-color: #a55eea;" data-color="#a55eea"></div>
+                <div class="color-option" style="background-color: #fff;" data-color="#fff" style="border: 1px solid #eee;"></div>
+            </div>
+            
+            <button class="cta-button" style="margin-top: 50px;">Save Design</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">Nex<span>Step</span></div>
+                <p class="footer-desc">Redefining footwear through innovation, sustainability, and cutting-edge 3D design technology.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links-section">
+                <h3 class="footer-title">Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#collection">Collection</a></li>
+                    <li><a href="#customizer">Customizer</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links-section">
+                <h3 class="footer-title">Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-newsletter">
+                <h3 class="footer-title">Stay Updated</h3>
+                <p class="footer-desc">Subscribe to our newsletter for exclusive offers and new releases.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 NexStep 3D Sneakers. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 3D Sneaker Rotation Controls
+        const sneaker3d = document.getElementById('sneaker3d');
+        const rotateLeft = document.getElementById('rotate-left');
+        const rotateRight = document.getElementById('rotate-right');
+        const zoomIn = document.getElementById('zoom-in');
+        const zoomOut = document.getElementById('zoom-out');
+        
+        let rotationY = 0;
+        let scale = 1;
+        
+        rotateLeft.addEventListener('click', () => {
+            rotationY -= 45;
+            sneaker3d.style.transform = `rotateY(${rotationY}deg) scale(${scale})`;
+        });
+        
+        rotateRight.addEventListener('click', () => {
+            rotationY += 45;
+            sneaker3d.style.transform = `rotateY(${rotationY}deg) scale(${scale})`;
+        });
+        
+        zoomIn.addEventListener('click', () => {
+            if (scale < 1.5) {
+                scale += 0.1;
+                sneaker3d.style.transform = `rotateY(${rotationY}deg) scale(${scale})`;
+            }
+        });
+        
+        zoomOut.addEventListener('click', () => {
+            if (scale > 0.5) {
+                scale -= 0.1;
+                sneaker3d.style.transform = `rotateY(${rotationY}deg) scale(${scale})`;
+            }
+        });
+
+        // Auto-rotate 3D sneaker
+        let autoRotateInterval = setInterval(() => {
+            rotationY += 0.5;
+            sneaker3d.style.transform = `rotateY(${rotationY}deg) scale(${scale})`;
+        }, 50);
+
+        // Pause auto-rotation on hover
+        sneaker3d.parentElement.addEventListener('mouseenter', () => {
+            clearInterval(autoRotateInterval);
+        });
+
+        sneaker3d.parentElement.addEventListener('mouseleave', () => {
+            autoRotateInterval = setInterval(() => {
+                rotationY += 0.5;
+                sneaker3d.style.transform = `rotateY(${rotationY}deg) scale(${scale})`;
+            }, 50);
+        });
+
+        // Customizer functionality
+        const customSneaker = document.getElementById('customSneaker');
+        const options = document.querySelectorAll('.option');
+        const colorOptions = document.querySelectorAll('.color-option');
+        
+        // Set initial color
+        customSneaker.style.backgroundColor = '#111';
+        
+        // Model selection
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                options.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Change sneaker image based on model
+                const model = this.getAttribute('data-model');
+                const images = {
+                    classic: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                    runner: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                    'high-top': 'https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                    minimal: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                };
+                
+                customSneaker.style.backgroundImage = `url('${images[model]}')`;
+            });
+        });
+        
+        // Color selection
+        colorOptions.forEach(colorOption => {
+            colorOption.addEventListener('click', function() {
+                const color = this.getAttribute('data-color');
+                customSneaker.style.backgroundColor = color;
+                
+                // Add a subtle animation
+                customSneaker.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    customSneaker.style.transform = 'scale(1)';
+                }, 200);
+            });
+        });
+
+        // Add to cart buttons
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const sneakerName = this.parentElement.querySelector('.sneaker-name').textContent;
+                const sneakerPrice = this.parentElement.querySelector('.sneaker-price').textContent;
+                
+                // Animation effect
+                this.textContent = 'Added!';
+                this.style.backgroundColor = '#2ed573';
+                
+                setTimeout(() => {
+                    this.textContent = 'Add to Cart';
+                    this.style.backgroundColor = '';
+                }, 2000);
+                
+                // In a real implementation, you would add to a shopping cart here
+                console.log(`Added ${sneakerName} to cart - ${sneakerPrice}`);
+            });
+        });
+
+        // Mobile menu toggle
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const nav = document.querySelector('nav ul');
+        
+        mobileMenu.addEventListener('click', () => {
+            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if(window.innerWidth <= 768) {
+                        nav.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // Newsletter form submission
+        const newsletterForm = document.querySelector('.newsletter-form');
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input').value;
+            
+            // In a real implementation, you would send this to a server
+            alert(`Thank you for subscribing with ${email}! You'll receive updates soon.`);
+            this.reset();
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.padding = '15px 5%';
+                header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.padding = '20px 5%';
+                header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.05)';
+            }
+        });
+    </script>
+</body>
+</html>
